@@ -15,17 +15,17 @@
 ## 性能情况
 | 训练数据集 | 权值文件名称 | 测试数据集 | 输入图片大小 | mAP 0.5:0.95 | mAP 0.5 |
 | :-----: | :-----: | :------: | :------: | :------: | :-----: |
-| VOC07+12 | [yolov3_efficientnet_b0_voc.h5](https://github.com/bubbliiiing/efficientnet-yolo3-tf2/releases/download/v1.0/yolov3_efficientnet_b0_voc.h5) | VOC-Test07 | 416x416 | - | 80.18
-| VOC07+12 | [yolov3_efficientnet_b1_voc.h5](https://github.com/bubbliiiing/efficientnet-yolo3-tf2/releases/download/v1.0/yolov3_efficientnet_b1_voc.h5) | VOC-Test07 | 416x416 | - | 81.81
-| VOC07+12 | [yolov3_efficientnet_b2_voc.h5](https://github.com/bubbliiiing/efficientnet-yolo3-tf2/releases/download/v1.0/yolov3_efficientnet_b2_voc.h5) | VOC-Test07 | 416x416 | - | 81.98
+| VOC07+12 | [yolov3_efficientnet_b0_voc.h5](https://github.com/bubbliiiing/efficientnet-yolo3-tf2/releases/download/v1.0/yolov3_efficientnet_b0_voc.h5) | VOC-Test07 | 416x416 | - | 79.44
+| VOC07+12 | [yolov3_efficientnet_b1_voc.h5](https://github.com/bubbliiiing/efficientnet-yolo3-tf2/releases/download/v1.0/yolov3_efficientnet_b1_voc.h5) | VOC-Test07 | 416x416 | - | 81.15
+| VOC07+12 | [yolov3_efficientnet_b2_voc.h5](https://github.com/bubbliiiing/efficientnet-yolo3-tf2/releases/download/v1.0/yolov3_efficientnet_b2_voc.h5) | VOC-Test07 | 416x416 | - | 80.35
 
 ## 所需环境
 tensorflow-gpu==2.2.0
 
 ## 文件下载
 训练所需的所有efficientnet权重可以在百度网盘下载   
-链接: https://pan.baidu.com/s/1ItGrFVQQjvY7y73a6UDVqA     
-提取码: s395    
+链接: https://pan.baidu.com/s/1jZmNDfGI_YYt998gAGWhuA     
+提取码: fxqe    
 
 VOC数据集下载地址如下，里面已经包括了训练集、测试集、验证集（与测试集一样），无需再次划分：  
 链接: https://pan.baidu.com/s/19Mw2u_df_nBzsC2lg20fQA    
