@@ -211,8 +211,11 @@ if __name__ == "__main__":
     for gpu in gpus:
         tf.config.experimental.set_memory_growth(gpu, True)
         
-    strategy = tf.distribute.MirroredStrategy()
-    print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
+    if ngpus_per_node > 1:
+        strategy = tf.distribute.MirroredStrategy()
+    else:
+        strategy = None
+        print('Number of devices: {}'.format(ngpus_per_node))
 
     #----------------------------------------------------#
     #   获取classes和anchor
@@ -277,7 +280,7 @@ if __name__ == "__main__":
         #   如果不冻结训练的话，直接设置batch_size为Unfreeze_batch_size
         #-------------------------------------------------------------------#
         batch_size  = Freeze_batch_size if Freeze_Train else Unfreeze_batch_size
-        
+
         #-------------------------------------------------------------------#
         #   判断当前batch_size，自适应调整学习率
         #-------------------------------------------------------------------#
@@ -318,7 +321,7 @@ if __name__ == "__main__":
             gen_val = gen_val.shuffle(buffer_size = batch_size).prefetch(buffer_size = batch_size)
 
             time_str        = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H_%M_%S')
-            log_dir         = os.path.join('logs', "loss_" + str(time_str))
+            log_dir         = os.path.join(save_dir, "loss_" + str(time_str))
             loss_history    = LossHistory(log_dir)
             #---------------------------------------#
             #   开始模型训练
@@ -366,10 +369,9 @@ if __name__ == "__main__":
 
                 lr = lr_scheduler_func(epoch)
                 K.set_value(optimizer.lr, lr)
-                K.set_value(optimizer.lr, lr)
 
                 fit_one_epoch(model_body, loss_history, optimizer, epoch, epoch_step, epoch_step_val, gen, gen_val, 
-                            end_epoch, input_shape, anchors, anchors_mask, num_classes, save_period, save_dir)
+                            end_epoch, input_shape, anchors, anchors_mask, num_classes, save_period, save_dir, strategy)
 
                 train_dataloader.on_epoch_end()
                 val_dataloader.on_epoch_end()
@@ -401,8 +403,8 @@ if __name__ == "__main__":
 
             if start_epoch < end_epoch:
                 print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, batch_size))
-                model.fit_generator(
-                    generator           = train_dataloader,
+                model.fit(
+                    x                   = train_dataloader,
                     steps_per_epoch     = epoch_step,
                     validation_data     = val_dataloader,
                     validation_steps    = epoch_step_val,
@@ -454,8 +456,8 @@ if __name__ == "__main__":
                 val_dataloader.batch_size      = Unfreeze_batch_size
 
                 print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, batch_size))
-                model.fit_generator(
-                    generator           = train_dataloader,
+                model.fit(
+                    x                   = train_dataloader,
                     steps_per_epoch     = epoch_step,
                     validation_data     = val_dataloader,
                     validation_steps    = epoch_step_val,
