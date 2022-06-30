@@ -99,8 +99,8 @@ class YOLO(object):
         model_path = os.path.expanduser(self.model_path)
         assert model_path.endswith('.h5'), 'Keras model or weights must be a .h5 file.'
         
-        self.yolo_model = yolo_body([None, None, 3], self.anchors_mask, self.num_classes, self.phi)
-        self.yolo_model.load_weights(self.model_path)
+        self.model = yolo_body([None, None, 3], self.anchors_mask, self.num_classes, self.phi)
+        self.model.load_weights(self.model_path)
 
         print('{} model, anchors, and classes loaded.'.format(model_path))
         #---------------------------------------------------------#
@@ -108,7 +108,7 @@ class YOLO(object):
         #   后处理的内容包括，解码、非极大抑制、门限筛选等
         #---------------------------------------------------------#
         self.input_image_shape = Input([2,],batch_size=1)
-        inputs  = [*self.yolo_model.output, self.input_image_shape]
+        inputs  = [*self.model.output, self.input_image_shape]
         outputs = Lambda(
             DecodeBox, 
             output_shape = (1,), 
@@ -124,7 +124,7 @@ class YOLO(object):
                 'letterbox_image'   : self.letterbox_image
              }
         )(inputs)
-        self.yolo_model = Model([self.yolo_model.input, self.input_image_shape], outputs)
+        self.yolo_model = Model([self.model.input, self.input_image_shape], outputs)
 
     @tf.function
     def get_pred(self, image_data, input_image_shape):
